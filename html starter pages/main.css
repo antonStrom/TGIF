@@ -1,0 +1,115 @@
+body {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.navbar-toggler-icon {
+    align-content: center;
+
+
+}
+
+#email {
+    width: 60px;
+    height: 60px;
+}
+
+.footer {
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #f2f2f2;
+    color: black;
+    text-align: center;
+    height: 30px;
+}
+
+#dropdown {
+    float: right;
+}
+
+
+#filters {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+}
+
+/*
+#selectstate {
+    position: relative;
+    bottom: 0px;
+    float: right;
+    color: ;
+    display: flex;
+    justify-content: space-between;
+}
+*/
+.checkbox {
+    width: 80%;
+    display: flex;
+}
+
+.logo {
+    display: flex;
+    justify-content: space-between;
+}
+
+#Republican {
+
+    margin-left: 7px;
+    margin-top: 7px;
+}
+
+#Democrat {
+    margin-left: 7px;
+    margin-top: 7px;
+}
+
+#Independant {
+    margin-left: 7px;
+    margin-top: 7px;
+}
+
+.table td,
+.table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    width: 80%;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+}
+
+
+
+
+.accordion-toggle {
+    cursor: pointer;
+}
+
+.accordion-content {
+    /* max-height: 0;
+    overflow: hidden; */
+    display: none;
+}
+
+.accordion-content.default {
+    display: none;
+}
+
+#more {
+    display: none;
+}
+
+#myBtn {
+    background: white;
+
+}
