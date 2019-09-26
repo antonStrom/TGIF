@@ -1,6 +1,4 @@
-const membersData = data.results[0].members
-
-
+let membersData = [];
 let newData = [{
         Party: "Democrat",
         Number: 0,
@@ -22,96 +20,97 @@ let newData = [{
 ];
 let leastMemberVotes = []
 
+if (location.pathname == "/senate_senate-party-loyalty-starter-page.html" || location.pathname == "/senate_senate-attendance-starter-page.html") {
+    getData('https://api.propublica.org/congress/v1/113/senate/members.json')
+} else {
+    getData('https://api.propublica.org/congress/v1/113/house/members.json')
+}
 
 
+async function getData(url) {
+    document.body.classList.add("loading");
+    membersData = await fetch(url, {
+            method: "GET",
+            headers: new Headers({
+                'X-API-key': 'Gqs9dMSRw1Y8Dws25dBBhFwLX0t19eeVPELeUxfK'
+            })
+        })
+        .then(response => response.json())
+        .then(data => data.results[0].members)
+    document.body.classList.remove('loading')
 
 
-for (var i = 0; i < membersData.length; i++) {
-    var allParty = membersData[i].party
-    var pctVotes = membersData[i].votes_with_party_pct
-    var missedVotes = membersData[i].missed_votes
+    fillNewData();
 
-    if (pctVotes != null) {
-        if (allParty.includes("D")) {
-            newData[0].Number++;
-            if (membersData[i].total_votes != null) {
-                newData[0].Voted = Math.round(newData[0].Voted + pctVotes);
-                newData[0].Average = Math.round(newData[0].Voted / newData[0].Number);
-                leastMemberVotes.push(membersData[i])
-            }
-        } else if (allParty.includes("R")) {
-            newData[1].Number++;
-            if (membersData[i].total_votes != null) {
-                newData[1].Voted = Math.round(newData[1].Voted + pctVotes);
-                newData[1].Average = Math.round(newData[1].Voted / newData[1].Number);
-                leastMemberVotes.push(membersData[i])
-            }
-        } else if (allParty.includes("I")) {
-            newData[2].Number++;
-            if (membersData[i].votes_with_party_pct != null) {
-                newData[2].Voted = Math.round(newData[2].Voted + pctVotes);
-                newData[2].Average = Math.round(newData[2].Voted / newData[2].Number);
-                leastMemberVotes.push(membersData[i])
+
+    let attendanceSortAsc = [...leastMemberVotes.sort((a, b) => parseFloat(a.missed_votes) - parseFloat(b.missed_votes))]
+    let tenPercent = attendanceSortAsc[Math.round(leastMemberVotes.length * 0.1)].missed_votes
+
+    let leastToWorst = [...leastMemberVotes.sort((b, a) => parseFloat(a.missed_votes) - parseFloat(b.missed_votes))]
+    let leastEngaged = leastToWorst[Math.round(leastToWorst.length * 0.1)].missed_votes
+
+
+    let sortBig = [...leastMemberVotes.sort((a, b) => parseFloat(a.votes_with_party_pct) - parseFloat(b.votes_with_party_pct))]
+    let leastLoyal = sortBig[Math.round(sortBig.length * 0.1)].votes_with_party_pct
+
+    let sortSmall = [...leastMemberVotes.sort((b, a) => parseFloat(a.votes_with_party_pct) - parseFloat(b.votes_with_party_pct))]
+    let mostLoyal = sortSmall[Math.round(sortSmall.length * 0.1)].votes_with_party_pct
+
+
+    topTen = getTopTenPercentArray(attendanceSortAsc, tenPercent, "missed_votes")
+    topTenLoyal = getTopTenPercentArray(sortBig, leastLoyal, "votes_with_party_pct")
+    bottomTen = getBottomTenPercentArray(leastToWorst, leastEngaged, "missed_votes")
+    bottomTenLoyal = getBottomTenPercentArray(sortSmall, mostLoyal, "votes_with_party_pct")
+
+    senateGlance()
+
+
+    if (location.pathname == "/senate_senate-party-loyalty-starter-page.html" || location.pathname == "/senate_house-party-loyalty-starter-page.html") {
+        loyalTable("leastLoyal", topTenLoyal);
+        loyalTable("mostLoyal", bottomTenLoyal);
+    }
+
+    if (location.pathname == "/senate_senate-attendance-starter-page.html" || location.pathname == "/senate_house-attendance-starter-page.html") {
+        loyalTable("table2", bottomTen);
+        loyalTable("table3", topTen);
+    }
+
+}
+
+function fillNewData() {
+
+    for (var i = 0; i < membersData.length; i++) {
+        var allParty = membersData[i].party
+        var pctVotes = membersData[i].votes_with_party_pct
+        var missedVotes = membersData[i].missed_votes
+
+        if (pctVotes != null) {
+            if (allParty.includes("D")) {
+                newData[0].Number++;
+                if (membersData[i].total_votes != null) {
+                    newData[0].Voted = Math.round(newData[0].Voted + pctVotes);
+                    newData[0].Average = Math.round(newData[0].Voted / newData[0].Number);
+                    leastMemberVotes.push(membersData[i])
+                }
+            } else if (allParty.includes("R")) {
+                newData[1].Number++;
+                if (membersData[i].total_votes != null) {
+                    newData[1].Voted = Math.round(newData[1].Voted + pctVotes);
+                    newData[1].Average = Math.round(newData[1].Voted / newData[1].Number);
+                    leastMemberVotes.push(membersData[i])
+                }
+            } else if (allParty.includes("I")) {
+                newData[2].Number++;
+                if (membersData[i].votes_with_party_pct != null) {
+                    newData[2].Voted = Math.round(newData[2].Voted + pctVotes);
+                    newData[2].Average = Math.round(newData[2].Voted / newData[2].Number);
+                    leastMemberVotes.push(membersData[i])
+                }
             }
         }
     }
+
 }
-
-let attendanceSortAsc = [...leastMemberVotes.sort((a, b) => parseFloat(a.missed_votes) - parseFloat(b.missed_votes))]
-let tenPercent = attendanceSortAsc[Math.round(leastMemberVotes.length * 0.1)].missed_votes
-
-let leastToWorst = [...leastMemberVotes.sort((b, a) => parseFloat(a.missed_votes) - parseFloat(b.missed_votes))]
-let leastEngaged = leastToWorst[Math.round(leastToWorst.length * 0.1)].missed_votes
-
-
-let sortBig = [...leastMemberVotes.sort((a, b) => parseFloat(a.votes_with_party_pct) - parseFloat(b.votes_with_party_pct))]
-let leastLoyal = sortBig[Math.round(sortBig.length * 0.1)].votes_with_party_pct
-
-let sortSmall = [...leastMemberVotes.sort((b, a) => parseFloat(a.votes_with_party_pct) - parseFloat(b.votes_with_party_pct))]
-let mostLoyal = sortSmall[Math.round(sortSmall.length * 0.1)].votes_with_party_pct
-
-
-senateGlance()
-
-
-
-let topTen = getTopTenPercentArray(attendanceSortAsc, tenPercent, "missed_votes")
-let topTenLoyal = getTopTenPercentArray(sortBig, leastLoyal, "votes_with_party_pct")
-// let bottomTen = getBottomTenPercentArray(sortSmall, leastEngaged, "missed_votes")
-// let bottomTenLoyal = getBottomTenPercentArray(sortBig, leastLoyal, "votes_with_party_pct")
-
-// 
-
-
-let bottomTen = []
-for (i = 0; i < leastToWorst.length; i++) {
-    let fff = leastToWorst[i]
-
-    if (fff.missed_votes >= leastEngaged) {
-        bottomTen.push(fff)
-    }
-}
-
-let bottomTenLoyal = []
-for (i = 0; i < sortBig.length; i++) {
-    let rrr = sortBig[i]
-    // console.log(rrr.votes_with_party_pct <= leastLoyal, `${rrr.votes_with_party_pct} <= ${leastLoyal}`)
-    if (rrr.votes_with_party_pct <= leastLoyal) {
-        bottomTenLoyal.push(rrr)
-    }
-}
-
-if (location.pathname == "/senate_senate-party-loyalty-starter-page.html" || location.pathname == "/senate_house-party-loyalty-starter-page.html") {
-    loyalTable("leastLoyal", bottomTenLoyal);
-    loyalTable("mostLoyal", topTenLoyal);
-}
-
-if (location.pathname == "/senate_senate-attendance-starter-page.html" || location.pathname == "/senate_house-attendance-starter-page.html") {
-    loyalTable("table2", bottomTen);
-    loyalTable("table3", topTen);
-}
-
-
 
 
 //   First table (senate at a glance)
@@ -166,17 +165,17 @@ function getTopTenPercentArray(sortedArray, topValue, key) {
     return array;
 }
 
-// function getBottomTenPercentArray(sortedArray, topValue, key) {
-//     let array = [];
-//     for (let i = 0; i < sortedArray.length; i++) {
-//         if (sortedArray[i][key] >= topValue) {
-//             array.push(sortedArray[i])
-//         } else {
-//             break;
-//         }
-//     }
-//     return array;
-// }
+function getBottomTenPercentArray(sortedArray, topValue, key) {
+    let array = [];
+    for (let i = 0; i < sortedArray.length; i++) {
+        if (sortedArray[i][key] >= topValue) {
+            array.push(sortedArray[i])
+        } else {
+            break;
+        }
+    }
+    return array;
+}
 
 //   most/least loyal
 function loyalTable(id, top) {
