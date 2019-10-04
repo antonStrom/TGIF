@@ -2,9 +2,9 @@ const app = new Vue({
     el: '#app',
     data: {
         membersData: [],
-        checked: [],
+        checked: ["R", "D", "I"],
         checkedParty: [],
-        select: []
+        select: "all"
     },
     created() {
         this.getData('https://api.propublica.org/congress/v1/113/senate/members.json')
@@ -24,14 +24,22 @@ const app = new Vue({
     },
     computed: {
         filteredMembers() {
-            return this.membersData.filter(member => this.checked.includes(member.party))
+            if (this.select == "all") {
+                return this.membersData.filter(member => this.checked.includes(member.party))
+            } else {
+                return this.membersData.filter(member => this.checked.includes(member.party) && this.select.includes(member.state))
+            }
         },
-        selected() {
-            return this.membersData.filter(member => this.select.includes(member.party))
-        }
     }
 });
 
+if (filteredMembers == 0) {
+    alert("Please select something!")
+}
+
+
+
+// let selected = this.select.includes(membersData.state)
 
 // for (let i = 0; i < this.membersData.length; i++) {
 //     let allParty = this.membersData[i]

@@ -18,15 +18,6 @@
 <body>
     <div id="app">
 
-        <!-- <img v-bind:src="image" alt="logo">
-        <p>Hello my name is {{name}}</p>
-        <input v-model='name'>
-        <button @click='filter'>Click</button>
-        <table v-if='name.length < 5'>
-            <tr v-for='name in names' :class='name'>
-                <td>{{name}}</td>
-            </tr>
-        </table> -->
         <div class="logo">
             <img src="Task%202%20logo.png" alt="Logo" width="60px" height="60px">
             <h2>TGIF</h2>
@@ -81,83 +72,84 @@
             </div>
         </nav>
 
-        <div class="loader"></div>
+        <div class="" v-if="membersData.length == 0">Loading ...</div>
 
+        <span v-if="membersData.length > 0">
 
-        <header>
             <div>
-            </div>
-        </header>
+                <h2>Senators</h2>
+                <p>First convened in 1789, the composition and powers of the Senate are established in Article One of
+                    the
+                    U.S.
+                    Constitution. Each state is represented by two senators, regardless of population, who serve
+                    staggered
+                    six-year terms. The Senate has several exclusive powers not granted to the House, including
+                    consenting
+                    to
+                    treaties as a precondition to their ratification and consenting to or confirming appointments of
+                    Cabinet
+                    secretaries, federal judges, other federal executive officials, military officers, regulatory
+                    officials,
+                    ambassadors, and other federal uniformed officers, as well as trial of federal officials impeached
+                    by
+                    the
+                    House.</p>
 
-        <div>
-            <h2>Senators</h2>
-            <p>First convened in 1789, the composition and powers of the Senate are established in Article One of the
-                U.S.
-                Constitution. Each state is represented by two senators, regardless of population, who serve staggered
-                six-year terms. The Senate has several exclusive powers not granted to the House, including consenting
-                to
-                treaties as a precondition to their ratification and consenting to or confirming appointments of Cabinet
-                secretaries, federal judges, other federal executive officials, military officers, regulatory officials,
-                ambassadors, and other federal uniformed officers, as well as trial of federal officials impeached by
-                the
-                House.</p>
+
+                <div id="filters">
+
+                    <div id="dropdown">
+                        <label for="selectstate">Filter by state:</label>
+                        <select id="selectstate" v-model="select">
+                            <option value="all">All states</option>
+                            <option v-bind:value="member.state" v-for="member in membersData">
+                                {{member.state}}
+                            </option>
+                        </select>
+                    </div>
 
 
-            <div id="filters">
+                    <div class="checkbox" id="checkbox">
+                        <label>Filter by party:</label>
 
-                <div id="dropdown">
-                    <label for="selectstate">Filter by state:</label>
-                    <select id="selectstate" v-model="select">
-                        <option value="all">All</option>
-                        <option v-bind:value="membersData.state" v-for="membersData in membersData">
-                            {{membersData.state}}
-                        </option>
-                    </select>
+                        <input type="checkbox" name="Republican" value="R" id="Republican" v-model="checked"
+                            checked>Republican
+                        <input type="checkbox" name="Democrat" value="D" id="Democrat" v-model="checked"
+                            checked>Democrat
+                        <input type="checkbox" name="Independant" value="I" id="Independant" v-model="checked"
+                            checked>Independant
+                    </div>
                 </div>
 
-
-                <div class="checkbox" id="checkbox">
-                    <label>Filter by party:</label>
-
-                    <input type="checkbox" name="Republican" value="R" id="Republican" v-model="checked">Republican
-                    <input type="checkbox" name="Democrat" value="D" id="Democrat" v-model="checked">Democrat
-                    <input type="checkbox" name="Independant" value="I" id="Independant" v-model="checked">Independant
+                <table id="table" class="table" v-if="filteredMembers.length > 0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Party</th>
+                            <th>State</th>
+                            <th>Years in office</th>
+                            <th>% voted with party</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="member in filteredMembers">
+                            <td>{{member.first_name}} {{member.middle_name}} {{member.last_name}}</td>
+                            <td>{{member.party}}</td>
+                            <td>{{member.state}}</td>
+                            <td>{{member.seniority}}</td>
+                            <td>{{member.votes_with_party_pct}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div v-if="filteredMembers.length == 0">
+                    THIS IS AN ALERT
                 </div>
-            </div>
+        </span>
 
-            <table id="table" class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Party</th>
-                        <th>State</th>
-                        <th>Years in office</th>
-                        <th>% voted with party</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="member in filteredMembers">
-                        <td>{{member.first_name}} {{member.middle_name}} {{member.last_name}}</td>
-                        <td>{{member.party}}</td>
-                        <td>{{member.state}}</td>
-                        <td>{{member.seniority}}</td>
-                        <td>{{member.votes_with_party_pct}}</td>
-                    </tr>
-                    <!-- <tr v-for="checked in checkedParty"></tr>
-                    <td>{{checkedParty.first_name}} {{checkedParty.middle_name}} {{checkedParty.last_name}}</td>
-                    <td>{{checkedParty.party}}</td>
-                    <td>{{checkedParty.state}}</td>
-                    <td>{{checkedParty.seniority}}</td>
-                    <td>{{checkedParty.votes_with_party_pct}}</td> -->
-                </tbody>
-            </table>
-
-            <div class="container" id="app"></div>
-
-            <div class="footer">
-                <p>&copy; 2016 TGIF | All Rights Reserved</p>
-            </div>
+        <div class="footer">
+            <p>&copy; 2016 TGIF | All Rights Reserved</p>
         </div>
+    </div>
 
     </div>
 
