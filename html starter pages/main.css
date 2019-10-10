@@ -159,3 +159,13 @@ body.loading {
 body.loading .loader {
     display: block;
 }
+
+.alert {
+    margin-left: 40%;
+
+}
+
+.loading {
+    margin-left: 45%;
+    margin-top: 30%;
+}

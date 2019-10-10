@@ -72,7 +72,7 @@
             </div>
         </nav>
 
-        <div class="" v-if="membersData.length == 0">Loading ...</div>
+        <div class="loading" v-if="membersData.length == 0">Loading ...</div>
 
         <span v-if="membersData.length > 0">
 
@@ -141,8 +141,8 @@
                         </tr>
                     </tbody>
                 </table>
-                <div v-if="filteredMembers.length == 0">
-                    THIS IS AN ALERT
+                <div v-if="filteredMembers.length == 0" class="alert">
+                    Please select a party!
                 </div>
         </span>
 

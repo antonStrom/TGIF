@@ -33,9 +33,7 @@ const app = new Vue({
     }
 });
 
-if (filteredMembers == 0) {
-    alert("Please select something!")
-}
+
 
 
 
